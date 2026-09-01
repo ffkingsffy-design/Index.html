@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#06050a">
+<title>A Little Something ♡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   PREMIUM RESET
+========================================================= */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+:root{
+  --bg:#06050a;
+  --bg2:#0c0910;
+  --ink:#3e3035;
+  --ink2:#624b53;
+  --paper:#f7efdf;
+  --paper2:#f2e6d1;
+  --rose:#d98ca1;
+  --rose2:#b6657f;
+  --gold:#b99562;
+  --muted:#81777d;
+}
+button{font:inherit}
+body{
+  font-family:Inter,system-ui,sans-serif;
+  background:var(--bg);
+  color:#fff;
+}
+
+/* =========================================================
+   SPACE BACKGROUND
+========================================================= */
+#space{
+  position:fixed;inset:0;overflow:hidden;z-index:0;
+  background:
+    radial-gradient(circle at 50% 36%,rgba(219,125,153,.14),transparent 30%),
+    radial-gradient(circle at 10% 85%,rgba(99,69,142,.10),transparent 28%),
+    radial-gradient(circle at 92% 10%,rgba(105,75,150,.08),transparent 25%),
+    #06050a;
+}
+.star{
+  position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;
+  opacity:.45;animation:drift linear infinite;
+}
+@keyframes drift{
+  from{transform:translateY(110vh);opacity:0}
+  15%{opacity:.65}
+  82%{opacity:.45}
+  to{transform:translateY(-12vh);opacity:0}
+}
+.glowOrb{
+  position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(80px);
+  opacity:.12;pointer-events:none;animation:orbFloat 12s ease-in-out infinite alternate;
+}
+.o1{background:#bb5378;left:-180px;top:15%}
+.o2{background:#6850a5;right:-190px;bottom:-80px;animation-direction:alternate-reverse}
+@keyframes orbFloat{to{transform:translate(100px,-60px) scale(1.15)}}
+
+/* =========================================================
+   SCREEN SYSTEM
+========================================================= */
+.scene{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+}
+.fade{
+  opacity:0!important;pointer-events:none!important;
+  transform:scale(1.045)!important;filter:blur(12px)!important;
+}
+.hidden{display:none!important}
+
+/* =========================================================
+   INTRO
+========================================================= */
+#intro{z-index:10;text-align:center}
+.introCard{position:relative;padding:30px}
+.introAura{
+  position:absolute;width:620px;height:620px;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(219,127,155,.10),transparent 66%);
+  animation:pulseAura 5s ease-in-out infinite;
+}
+@keyframes pulseAura{
+  50%{transform:translate(-50%,-50%) scale(1.12);opacity:.8}
+}
+.kicker{
+  color:#79737a;font-size:9px;letter-spacing:7px;text-transform:uppercase;
+  margin-bottom:28px;
+}
+.introTitle{
+  font:400 clamp(78px,12vw,150px)/.73 "Cormorant Garamond",serif;
+  letter-spacing:-6px;
+}
+.introTitle span{
+  color:#e8a9ba;text-shadow:0 0 50px rgba(232,169,186,.26)
+}
+.introText{margin:38px auto 0;color:#777;max-width:430px;font-size:11px;line-height:1.8;letter-spacing:1.8px}
+.primary{
+  margin-top:35px;padding:15px 40px;border-radius:999px;
+  border:1px solid rgba(232,169,186,.48);
+  color:#ddd;background:rgba(255,255,255,.025);
+  cursor:pointer;font-size:9px;letter-spacing:4px;transition:.35s;
+}
+.primary:hover{background:#e8a9ba;color:#1a1115;transform:translateY(-4px);box-shadow:0 15px 50px rgba(220,130,155,.18)}
+.primary:active{transform:scale(.97)}
+.micro{margin-top:23px;color:#4f4a51;font-size:8px;letter-spacing:3px}
+
+/* =========================================================
+   SNAKE
+========================================================= */
+#game{z-index:20;opacity:0;pointer-events:none;transition:opacity 1s,transform 1s,filter 1s}
+#game.show{opacity:1;pointer-events:auto}
+.gameFrame{width:min(540px,94vw);text-align:center}
+.gameHeader{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+.gameEyebrow{font-size:8px;color:#757078;letter-spacing:5px;text-transform:uppercase}
+.gameTitle{font:500 38px "Cormorant Garamond",serif;color:#f2e0e5}
+.stats{display:flex;gap:14px;color:#777;font-size:8px;letter-spacing:2px;text-transform:uppercase}
+.stats b{color:var(--rose);font-size:13px;margin-left:4px}
+#snakeCanvas{
+  display:block;width:min(480px,88vw);height:min(480px,88vw);margin:auto;
+  border:1px solid rgba(233,166,184,.18);border-radius:18px;
+  background:#09080e;box-shadow:0 30px 110px rgba(0,0,0,.65),0 0 50px rgba(214,118,145,.06);
+  touch-action:none;
+}
+.gameHint{margin-top:13px;color:#5f5960;font-size:8px;letter-spacing:2px}
+.gameControls{display:grid;grid-template-columns:repeat(3,52px);gap:6px;justify-content:center;margin-top:14px}
+.gameControls button{
+  width:52px;height:43px;border-radius:12px;border:1px solid #343039;background:#111017;color:#aaa;cursor:pointer
+}
+.gameControls button:active{transform:scale(.93);color:var(--rose);background:#21161d}
+.up{grid-column:2}.left{grid-column:1;grid-row:2}.down{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}
+#gameOverlay{
+  position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;
+  background:rgba(5,4,9,.86);backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:.7s;
+}
+#gameOverlay.show{opacity:1;pointer-events:auto}
+.gameOverlayBox{text-align:center;max-width:560px;padding:30px}
+.gameIcon{font-size:58px;color:var(--rose);animation:heartbeat 1.5s infinite}
+.gameOverlayBox h2{font:500 clamp(48px,8vw,80px) "Cormorant Garamond",serif;margin:10px 0}
+.gameOverlayBox p{color:#999;font-size:11px;line-height:1.8}
+.gameOverlayBox .primary{margin-top:26px}
+@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}}
+
+/* =========================================================
+   CONGRATS CEREMONY
+========================================================= */
+#celebrate{
+  z-index:30;background:radial-gradient(circle,rgba(220,100,145,.17),transparent 35%),#050509;
+  opacity:0;pointer-events:none;transition:1s;
+}
+#celebrate.show{opacity:1}
+.celebrateBox{text-align:center}
+.congrats{
+  font:500 clamp(54px,9vw,100px) "Cormorant Garamond",serif;color:#f2dce4
+}
+.congratsSub{margin-top:8px;color:#999;font-size:10px;letter-spacing:4px}
+.smile{font-size:58px;margin-top:22px;animation:pop .8s ease}
+@keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.16)}100%{transform:scale(1);opacity:1}}
+.balloon{position:absolute;bottom:-80px;font-size:42px;animation:balloon 4.5s ease-in forwards}
+@keyframes balloon{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(-115vh) rotate(20deg);opacity:0}}
+.confetti{
+  position:absolute;width:6px;height:9px;bottom:0;opacity:0;animation:confetti 3.4s linear forwards
+}
+@keyframes confetti{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.7}100%{transform:translateY(-110vh) rotate(720deg);opacity:0}}
+
+/* =========================================================
+   LETTER GATE
+========================================================= */
+#gate{
+  z-index:40;opacity:0;pointer-events:none;transition:1s;
+  background:radial-gradient(circle,rgba(220,100,145,.12),transparent 40%),#050509;
+  text-align:center;
+}
+#gate.show{opacity:1;pointer-events:auto}
+.gateSmall{font-size:9px;letter-spacing:6px;color:#777;text-transform:uppercase}
+.gateTitle{font:500 clamp(48px,7vw,80px) "Cormorant Garamond",serif;margin-top:15px;color:#f2dce4}
+.gateNote{color:#777;font-size:11px;margin-top:12px}
+
+/* =========================================================
+   LETTER
+========================================================= */
+#letterScene{
+  z-index:50;opacity:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(220,100,145,.11),transparent 40%),#07060a;
+  transition:1.1s;
+}
+#letterScene.show{opacity:1;pointer-events:auto}
+.book{
+  position:relative;width:min(1020px,91vw);height:min(690px,78vh);
+  perspective:2400px;
+}
+.paper{
+  position:absolute;inset:0;border-radius:3px;overflow:hidden;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(156,112,84,.07),transparent 28%),
+    radial-gradient(circle at 90% 90%,rgba(145,104,85,.06),transparent 32%),
+    repeating-linear-gradient(0deg,rgba(78,50,32,.022) 0 1px,transparent 1px 4px),
+    linear-gradient(90deg,rgba(255,255,255,.22),transparent 12%,transparent 88%,rgba(120,80,50,.05)),
+    var(--paper);
+  box-shadow:0 50px 140px rgba(0,0,0,.78),0 0 80px rgba(215,130,155,.06);
+}
+.paper:before{
+  content:"";position:absolute;inset:18px;border:1px solid rgba(81,53,47,.12);pointer-events:none;z-index:20;
+}
+.paperCorner{
+  position:absolute;inset:0;pointer-events:none;z-index:20;
+}
+.paperCorner:before,.paperCorner:after{
+  content:"♡";position:absolute;font:26px "Caveat",cursive;color:rgba(169,96,119,.14)
+}
+.paperCorner:before{top:28px;left:28px}.paperCorner:after{bottom:28px;right:28px}
+.page{
+  position:absolute;inset:0;display:none;z-index:2;
+}
+.page.active{display:block;animation:turnIn .72s cubic-bezier(.2,.8,.2,1)}
+@keyframes turnIn{
+  from{opacity:0;transform:rotateY(-20deg) translateX(24px);transform-origin:left}
+  to{opacity:1;transform:none}
+}
+/* THIS is the actual scrolling container */
+.pageScroll{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding:78px 100px 155px;scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:#c58297 transparent;
+  touch-action:pan-y;
+}
+.pageScroll::-webkit-scrollbar{width:5px}
+.pageScroll::-webkit-scrollbar-thumb{background:#c58297;border-radius:10px}
+.pageScroll::-webkit-scrollbar-track{background:transparent}
+.pageContent{max-width:790px;margin:0 auto}
+.pageLabel{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:#9d6274;margin-bottom:17px}
+.page h1,.page h2{
+  font-family:"Caveat",cursive;color:#54343f;font-weight:500;line-height:.95
+}
+.page h1{font-size:72px;margin-bottom:28px}.page h2{font-size:57px;margin-bottom:26px}
+.page p{
+  font:500 25px/1.48 "Caveat",cursive;color:#46363b;margin-bottom:16px;
+}
+.quote{
+  padding:10px 0 10px 20px;border-left:2px solid #d399a9;color:#714a58!important;
+}
+.handSign{font:500 37px "Caveat",cursive;color:#934e68;margin-top:25px}
+.pageFooter{
+  margin-top:35px;padding-top:17px;border-top:1px solid rgba(70,40,40,.12);
+  display:flex;justify-content:space-between;color:#aa8c94;font:400 14px "Caveat",cursive
+}
+/* special memory section */
+.memoryStrip{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:24px 0 18px
+}
+.memory{
+  padding:18px;border:1px solid rgba(130,84,95,.16);background:rgba(255,255,255,.28);
+  border-radius:5px;box-shadow:0 6px 20px rgba(90,50,50,.05)
+}
+.memory b{display:block;color:#8f596c;font:500 20px "Caveat",cursive;margin-bottom:5px}
+.memory span{color:#806e73;font:400 17px/1.35 "Caveat",cursive}
+/* nav is OUTSIDE scroll container and above everything */
+.letterNav{
+  position:absolute;left:45px;right:45px;bottom:22px;height:50px;
+  z-index:50;display:flex;align-items:center;justify-content:space-between;
+  pointer-events:auto;
+}
+.letterNav button{
+  border:1px solid rgba(106,69,80,.17);background:rgba(255,250,243,.82);
+  color:#765d65;border-radius:999px;padding:11px 18px;cursor:pointer;letter-spacing:3px;
+  font-size:9px;box-shadow:0 5px 18px rgba(80,40,45,.06);transition:.25s;
+  backdrop-filter:blur(6px);
+}
+.letterNav button:hover{background:#fff7ed;color:#4d353d;transform:translateY(-2px)}
+.letterNav button:disabled{opacity:.35;pointer-events:none}
+.progressWrap{display:flex;align-items:center;gap:10px}
+.pageCount{font-size:8px;letter-spacing:2px;color:#8a747b}
+.progress{width:180px;height:2px;background:rgba(100,70,75,.12);border-radius:2px}
+.progress span{display:block;height:100%;width:16.66%;background:#c4778c;border-radius:2px;transition:.45s}
+.scrollHint{
+  display:none;position:sticky;bottom:7px;left:50%;transform:translateX(-50%);
+  width:max-content;color:#8f747c;font:400 14px "Caveat",cursive;opacity:.65;
+}
+
+/* =========================================================
+   FINAL + LOVE
+========================================================= */
+#final{
+  z-index:70;opacity:0;pointer-events:none;transition:1.2s;
+  background:radial-gradient(circle,rgba(216,105,142,.15),transparent 38%),#050509;
+}
+#final.show{opacity:1;pointer-events:auto}
+.finalBox{text-align:center}
+.finalHeart{font-size:106px;color:var(--rose);text-shadow:0 0 55px rgba(225,140,165,.24);animation:heartbeat 1.5s infinite}
+.finalTitle{font:400 82px "Cormorant Garamond",serif;margin-top:14px}
+.finalSub{color:#777;font-size:10px;letter-spacing:4px;margin-top:15px}
+#loveScreen{
+  z-index:80;opacity:0;pointer-events:none;transition:1.4s;
+  background:
+    radial-gradient(circle at center,rgba(231,128,157,.22),transparent 28%),
+    #050509;
+}
+#loveScreen.show{opacity:1;pointer-events:auto}
+.loveStage{text-align:center;position:relative;padding:30px}
+.loveHalo{
+  position:absolute;width:420px;height:420px;left:50%;top:50%;
+  transform:translate(-50%,-50%);border:1px solid rgba(233,166,184,.09);border-radius:50%;
+  box-shadow:0 0 100px rgba(215,120,145,.08) inset;
+  animation:halo 5s ease-in-out infinite;
+}
+@keyframes halo{50%{transform:translate(-50%,-50%) scale(1.13);opacity:.6}}
+.clickRing{
+  width:150px;height:150px;border-radius:50%;margin:0 auto 28px;
+  border:1px solid rgba(233,166,184,.48);display:flex;align-items:center;justify-content:center;
+  color:#dba0b1;letter-spacing:3px;font-size:9px;cursor:pointer;position:relative;
+  animation:ringPulse 2.2s infinite;transition:.3s
+}
+.clickRing:hover{background:rgba(233,166,184,.08);transform:scale(1.04)}
+@keyframes ringPulse{
+  50%{box-shadow:0 0 0 18px rgba(233,166,184,.015),0 0 40px rgba(233,166,184,.14)}
+}
+.loveText{
+  font:500 clamp(68px,12vw,150px)/.8 "Cormorant Garamond",serif;
+  color:#f6dfe6;opacity:0;transform:scale(.65);filter:blur(15px);
+}
+#loveScreen.revealed .clickRing{opacity:0;transform:scale(.5);pointer-events:none;position:absolute}
+#loveScreen.revealed .loveText{
+  animation:loveReveal 2.2s cubic-bezier(.2,.8,.2,1) forwards
+}
+@keyframes loveReveal{
+  0%{opacity:0;transform:scale(.55);filter:blur(15px)}
+  55%{opacity:1;transform:scale(1.08);filter:blur(0)}
+  100%{opacity:1;transform:scale(1);filter:blur(0)}
+}
+.loveText span{color:var(--rose);text-shadow:0 0 60px rgba(233,166,184,.3)}
+.loveTiny{margin-top:30px;color:#777;font-size:9px;letter-spacing:4px;opacity:0}
+#loveScreen.revealed .loveTiny{animation:appear 1.2s ease 2s forwards}
+@keyframes appear{to{opacity:1}}
+.loveParticle{
+  position:absolute;bottom:-20px;color:rgba(233,166,184,.5);font-size:18px;
+  animation:particleUp 5s linear forwards
+}
+@keyframes particleUp{
+  to{transform:translateY(-115vh) rotate(35deg);opacity:0}
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+@media(max-width:700px){
+  #cursorGlow{display:none}
+  .introTitle{font-size:78px;letter-spacing:-4px}
+  .introText{font-size:9px;max-width:285px}
+  .gameTitle{font-size:30px}.stats{gap:8px}
+  .stats{font-size:7px}
+  .stats b{font-size:11px}
+  #snakeCanvas{width:88vw;height:88vw}
+  .gameHint{font-size:7px}
+  .book{width:92vw;height:72vh}
+  .pageScroll{padding:68px 27px 170px}
+  .pageContent{max-width:none}
+  .page h1{font-size:52px}
+  .page h2{font-size:43px}
+  .page p{font-size:20px;line-height:1.42}
+  .number{font-size:8px}
+  .memoryStrip{grid-template-columns:1fr}
+  .memory b{font-size:19px}.memory span{font-size:16px}
+  .letterNav{left:14px;right:14px;bottom:12px;height:55px}
+  .letterNav button{padding:10px 13px;font-size:7px}
+  .progress{width:65px}.pageCount{display:none}
+  .scrollHint{display:block}
+  .finalTitle{font-size:58px}.finalHeart{font-size:82px}
+  .clickRing{width:135px;height:135px}
+  .loveText{font-size:70px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="space">
+  <div class="glowOrb o1"></div>
+  <div class="glowOrb o2"></div>
+</div>
+
+<!-- =========================================================
+     INTRO
+========================================================= -->
+<section id="intro" class="scene">
+  <div class="introCard">
+    <div class="introAura"></div>
+    <div class="kicker">Something I made myself</div>
+    <div class="introTitle">For<br><span>You ♡</span></div>
+    <div class="introText">
+      This isn't really a gift... it's a little experience.<br>
+      Take your time. There's more than one thing waiting for you.
+    </div>
+    <button class="primary" onclick="beginExperience()">BEGIN</button>
+    <div class="micro">made with time · thought · and a little too much effort</div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SNAKE
+========================================================= -->
+<section id="game" class="scene">
+  <div class="gameFrame">
+    <div class="gameHeader">
+      <div>
+        <div class="gameEyebrow">First, a tiny challenge</div>
+        <div class="gameTitle">Catch two little hearts.</div>
+      </div>
+      <div class="stats">SCORE <b id="score">0</b> · TIME <b id="timer">0</b></div>
+    </div>
+    <canvas id="snakeCanvas" width="420" height="420"></canvas>
+    <div class="gameHint">ARROWS / WASD / SWIPE · TWO HEARTS UNLOCK THE NEXT PART</div>
+    <div class="gameControls">
+      <button class="up" onclick="setDirection('up')">↑</button>
+      <button class="left" onclick="setDirection('left')">←</button>
+      <button class="down" onclick="setDirection('down')">↓</button>
+      <button class="right" onclick="setDirection('right')">→</button>
+    </div>
+  </div>
+</section>
+
+<div id="gameOverlay">
+  <div class="gameOverlayBox">
+    <div class="gameIcon">♡</div>
+    <h2>Nice.</h2>
+    <p>You found both hearts.<br>Okay... I think you've earned what's next.</p>
+    <button class="primary" onclick="showCongratulations()">CONTINUE</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     CONGRATULATIONS
+========================================================= -->
+<section id="celebrate" class="scene">
+  <div class="celebrateBox">
+    <div class="congrats">Congratulations! ♡</div>
+    <div class="congratsSub">YOU ACTUALLY MADE IT</div>
+    <div class="smile">😊</div>
+  </div>
+  <div id="celebrationObjects"></div>
+</section>
+
+<!-- =========================================================
+     LETTER GATE
+========================================================= -->
+<section id="gate" class="scene">
+  <div>
+    <div class="gateSmall">One last little thing</div>
+    <div class="gateTitle">Open your letter again.</div>
+    <div class="gateNote">The game was only the beginning.</div>
+    <button class="primary" onclick="openLetter()">OPEN YOUR LETTER ♡</button>
+  </div>
+</section>
+
+<!-- =========================================================
+     LETTER
+========================================================= -->
+<section id="letterScene" class="scene">
+
+<div class="book">
+<div class="paper">
+<div class="paperCorner"></div>
+
+<!-- PAGE 1 -->
+<article class="page active">
+  <div class="number">01 / 06</div>
+  <div class="pageScroll">
+    <div class="pageContent">
+      <div class="pageLabel">A little letter</div>
+      <h1>Hey, you.</h1>
+      <p>I could have bought something.</p>
+      <p>But somehow, spending money didn't feel like the right way to make this special.</p>
+      <p class="quote">So I made something myself instead.</p>
+      <p>It isn't perfect. But neither am I. And that's okay.</p>
+      <div class="pageFooter"><span>made slowly</span><span>♡</span></div>
+      <div class="scrollHint">scroll to read ↓</div>
+    </div>
+  </div>
+</article>
+
+<!-- PAGE 2 -->
+<article class="page">
+  <div class="number">02 / 06</div>
+  <div class="pageScroll">
+    <div class="pageContent">
+      <div class="pageLabel">The little things</div>
+      <h2>I remember.</h2>
+      <p>Your random messages. Your little updates. The things you tell me without even thinking they're important.</p>
+      <p>And somehow, I remember more of them than I probably should.</p>
+
+      <div class="memoryStrip">
+        <div class="memory"><b>the random moments</b><span>The things that shouldn't matter much... somehow do.</span></div>
+        <div class="memory"><b>the little details</b><span>Sometimes the smallest things are what stay the longest.</span></div>
+      </div>
+
+      <p class="quote">Maybe that's because I actually like listening to you.</p>
+      <div class="pageFooter"><span>some things stay</span><span>♡</span></div>
+    </div>
+  </div>
+</article>
+
+<!-- PAGE 3 -->
+<article class="page">
+  <div class="number">03 / 06</div>
+  <div class="pageScroll">
+    <div class="pageContent">
+      <div class="pageLabel">Things about you</div>
+      <h2>Little details.</h2>
+      <p>Your favourite things. Your random interests. The things you love and the things you absolutely cannot stand.</p>
+      <p>I might not remember every single thing, but I genuinely like learning more about you.</p>
+      <p class="quote">The little details are usually the ones that stay.</p>
+      <p>And maybe that's what makes getting to know someone feel different — slowly discovering all the tiny pieces that make them who they are.</p>
+      <div class="pageFooter"><span>the details matter</span><span>♡</span></div>
+    </div>
+  </div>
+</article>
+
+<!-- PAGE 4 -->
+<article class="page">
+  <div class="number">04 / 06</div>
+  <div class="pageScroll">
+    <div class="pageContent">
+      <div class="pageLabel">02:00 AM</div>
+      <h2>And somehow...</h2>
+      <p>A normal conversation turns into another conversation, which turns into another...</p>
+      <p>And suddenly it's ridiculously late.</p>
+      <p class="quote">I don't know how we keep finding things to talk about.</p>
+      <p>But I kind of hope we never run out.</p>
+      <div class="pageFooter"><span>one more message...</span><span>♡</span></div>
+    </div>
+  </div>
+</article>
+
+<!-- PAGE 5 -->
+<article class="page">
+  <div class="number">05 / 06</div>
+  <div class="pageScroll">
+    <div class="pageContent">
+      <div class="pageLabel">Something honest</div>
+      <h2>Somewhere along the way...</h2>
+      <p>You stopped being just someone I happened to talk to.</p>
+      <p>I started looking forward to seeing your messages.</p>
+      <p>I started remembering the little details.</p>
+      <p class="quote">And somewhere between all of that, I started genuinely caring about you.</p>
+      <p>No dramatic speech. I just wanted you to know.</p>
+      <div class="pageFooter"><span>just something honest</span><span>♡</span></div>
+    </div>
+  </div>
+</article>
+
+<!-- PAGE 6 -->
+<article class="page">
+  <div class="number">06 / 06</div>
+  <div class="pageScroll">
+    <div class="pageContent">
+      <div class="pageLabel">One last thing</div>
+      <h2>Thank you. ♡</h2>
+      <p>I don't know what the future looks like.</p>
+      <p>So I won't make some huge promise about it.</p>
+      <p>I just hope there are more conversations, more stupid jokes, more random stories, and more moments that make us smile.</p>
+      <p>Because honestly...</p>
+      <div class="handSign">I'm really glad I met you.</div>
+      <div class="pageFooter"><span>end of the letter</span><span>♡</span></div>
+    </div>
+  </div>
+</article>
+
+<!-- NAV OUTSIDE SCROLL -->
+<nav class="letterNav">
+  <button id="backBtn" onclick="previousPage()">← BACK</button>
+  <div class="progressWrap">
+    <div class="pageCount" id="pageCount">01 / 06</div>
+    <div class="progress"><span id="progress"></span></div>
+  </div>
+  <button id="nextBtn" onclick="nextPage()">NEXT →</button>
+</nav>
+
+</div>
+</div>
+</section>
+
+<!-- =========================================================
+     THAT'S ALL
+========================================================= -->
+<section id="final" class="scene">
+  <div class="finalBox">
+    <div class="finalHeart">♡</div>
+    <div class="finalTitle">That's all.</div>
+    <div class="finalSub">or... maybe not quite.</div>
+  </div>
+</section>
+
+<!-- =========================================================
+     CLICK HERE → I LOVE YOU
+========================================================= -->
+<section id="loveScreen" class="scene">
+  <div id="loveParticles"></div>
+  <div class="loveStage">
+    <div class="loveHalo"></div>
+    <button class="clickRing" onclick="revealLove()">CLICK HERE<br>♡</button>
+    <div class="loveText">I <span>LOVE</span><br>YOU ♡</div>
+    <div class="loveTiny">made for you · from the heart</div>
+  </div>
+</section>
+
+<script>
+/* =========================================================
+   BACKGROUND
+========================================================= */
+const space=document.getElementById("space");
+for(let i=0;i<125;i++){
+  const s=document.createElement("i");
+  s.className="star";
+  const z=.5+Math.random()*2;
+  s.style.width=z+"px";
+  s.style.height=z+"px";
+  s.style.left=Math.random()*100+"%";
+  s.style.animationDuration=(7+Math.random()*22)+"s";
+  s.style.animationDelay=(-Math.random()*24)+"s";
+  space.appendChild(s);
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+let started=false;
+function beginExperience(){
+  if(started)return;
+  started=true;
+  document.getElementById("intro").classList.add("fade");
+  setTimeout(()=>{
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("game").classList.add("show");
+    startSnake();
+  },900);
+}
+
+/* =========================================================
+   SNAKE
+========================================================= */
+const canvas=document.getElementById("snakeCanvas");
+const ctx=canvas.getContext("2d");
+const GRID=21;
+const CELL=canvas.width/GRID;
+
+let snake=[],food={x:0,y:0},dir={x:1,y:0},nextDir={x:1,y:0};
+let score=0,gameRunning=false,moveTimer=null,clockTimer=null,startTime=0;
+
+function startSnake(){
+  clearTimeout(moveTimer); clearInterval(clockTimer);
+  snake=[
+    {x:10,y:10},{x:9,y:10},{x:8,y:10}
+  ];
+  dir={x:1,y:0};nextDir={x:1,y:0};score=0;startTime=Date.now();
+  document.getElementById("score").textContent="0";
+  document.getElementById("timer").textContent="0";
+  placeFood();drawSnake();
+  gameRunning=true;
+
+  clockTimer=setInterval(()=>{
+    if(!gameRunning)return;
+    document.getElementById("timer").textContent=Math.floor((Date.now()-startTime)/1000);
+  },250);
+
+  moveSnake();
+}
+function placeFood(){
+  do{
+    food={x:Math.floor(Math.random()*GRID),y:Math.floor(Math.random()*GRID)};
+  }while(snake.some(p=>p.x===food.x&&p.y===food.y));
+}
+function moveSnake(){
+  if(!gameRunning)return;
+  dir=nextDir;
+  const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+
+  if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID||snake.some((p,i)=>i>0&&p.x===head.x&&p.y===head.y)){
+    /* Reset instead of ending: keeps it fun, not punishing */
+    snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+    dir={x:1,y:0};nextDir={x:1,y:0};placeFood();drawSnake();
+    moveTimer=setTimeout(moveSnake,145);
+    return;
+  }
+
+  snake.unshift(head);
+
+  if(head.x===food.x&&head.y===food.y){
+    score++;
+    document.getElementById("score").textContent=score;
+    if(score>=2){
+      gameRunning=false;
+      clearInterval(clockTimer);
+      drawSnake();
+      setTimeout(()=>document.getElementById("gameOverlay").classList.add("show"),650);
+      return;
+    }
+    placeFood();
+  }else{
+    snake.pop();
+  }
+
+  drawSnake();
+  moveTimer=setTimeout(moveSnake,145);
+}
+function drawSnake(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#09080e";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="rgba(255,255,255,.018)";
+  ctx.lineWidth=1;
+  for(let i=0;i<=GRID;i++){
+    ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,canvas.height);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(canvas.width,i*CELL);ctx.stroke();
+  }
+
+  const fx=food.x*CELL+CELL/2,fy=food.y*CELL+CELL/2;
+  const glow=ctx.createRadialGradient(fx,fy,1,fx,fy,19);
+  glow.addColorStop(0,"rgba(233,166,184,.45)");
+  glow.addColorStop(1,"rgba(233,166,184,0)");
+  ctx.fillStyle=glow;ctx.beginPath();ctx.arc(fx,fy,19,0,Math.PI*2);ctx.fill();
+  ctx.font=(CELL*.72)+"px serif";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillStyle="#e9a6b8";ctx.fillText("♡",fx,fy);
+
+  snake.forEach((p,i)=>{
+    const x=p.x*CELL+2,y=p.y*CELL+2,size=CELL-4;
+    ctx.fillStyle=i===0?"#f4c2cf":"#bc7389";
+    ctx.beginPath();
+      const r=Math.min(5,size/3);
+      ctx.moveTo(x+r,y);ctx.arcTo(x+size,y,x+size,y+size,r);
+      ctx.arcTo(x+size,y+size,x,y+size,r);
+      ctx.arcTo(x,y+size,x,y,r);
+      ctx.arcTo(x,y,x+size,y,r);
+      ctx.closePath();ctx.fill();
+    if(i===0){
+      ctx.fillStyle="#422d34";
+      const ex=x+size*.34,ey=y+size*.32;
+      ctx.beginPath();ctx.arc(ex,ey,1.8,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(x+size*.66,ey,1.8,0,Math.PI*2);ctx.fill();
+    }
+  });
+}
+function setDirection(d){
+  if(!gameRunning)return;
+  const map={
+    up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}
+  };
+  const n=map[d];
+  if(!n)return;
+  if(n.x===-dir.x&&n.y===-dir.y)return;
+  nextDir=n;
+}
+document.addEventListener("keydown",e=>{
+  const m={
+    ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",
+    w:"up",W:"up",s:"down",S:"down",a:"left",A:"left",d:"right",D:"right"
+  };
+  if(m[e.key]){
+    e.preventDefault();
+    setDirection(m[e.key]);
+  }
+});
+let sx=0,sy=0;
+canvas.addEventListener("touchstart",e=>{
+  sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+},{passive:true});
+canvas.addEventListener("touchend",e=>{
+  const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+  if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;
+  if(Math.abs(dx)>Math.abs(dy))setDirection(dx>0?"right":"left");
+  else setDirection(dy>0?"down":"up");
+},{passive:true});
+
+/* =========================================================
+   GAME TRANSITION
+========================================================= */
+function showCongratulations(){
+  document.getElementById("gameOverlay").classList.remove("show");
+  document.getElementById("game").classList.remove("show");
+  const celebration=document.getElementById("celebrate");
+  celebration.classList.add("show");
+  spawnCelebration();
+
+  setTimeout(()=>{
+    celebration.classList.remove("show");
+    setTimeout(()=>document.getElementById("gate").classList.add("show"),500);
+  },4200);
+}
+function spawnCelebration(){
+  const box=document.getElementById("celebrationObjects");
+  box.innerHTML="";
+  for(let i=0;i<3;i++){
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.textContent="🎈";
+    b.style.left=(15+i*31+Math.random()*10)+"%";
+    b.style.animationDelay=(i*.35)+"s";
+    box.appendChild(b);
+  }
+  for(let i=0;i<35;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"%";
+    c.style.background=["#e8a9ba","#d5b27a","#efe8df"][Math.floor(Math.random()*3)];
+    c.style.animationDelay=(Math.random()*.8)+"s";
+    box.appendChild(c);
+  }
+}
+function openLetter(){
+  document.getElementById("gate").classList.remove("show");
+  setTimeout(()=>{
+    document.getElementById("letterScene").classList.add("show");
+    current=0;
+    updatePage();
+  },650);
+}
+
+/* =========================================================
+   LETTER NAVIGATION
+   ========================================================= */
+const pages=document.querySelectorAll(".page");
+let current=0;
+let navLocked=false;
+
+function updatePage(){
+  pages.forEach((p,i)=>p.classList.toggle("active",i===current));
+  document.getElementById("pageCount").textContent=
+    String(current+1).padStart(2,"0")+" / 06";
+  document.getElementById("progress").style.width=
+    ((current+1)/pages.length*100)+"%";
+  document.getElementById("backBtn").disabled=current===0;
+  document.getElementById("nextBtn").textContent=
+    current===pages.length-1?"FINISH →":"NEXT →";
+  const scrollArea=pages[current].querySelector(".pageScroll");
+  if(scrollArea)scrollArea.scrollTop=0;
+}
+
+function nextPage(){
+  if(navLocked)return;
+  if(current<pages.length-1){
+    navLocked=true;
+    current++;
+    updatePage();
+    setTimeout(()=>navLocked=false,650);
+    return;
+  }
+  finishLetter();
+}
+function previousPage(){
+  if(navLocked||current===0)return;
+  navLocked=true;
+  current--;
+  updatePage();
+  setTimeout(()=>navLocked=false,650);
+}
+
+/* swipe left/right ONLY when touch begins outside scrollable text */
+let letterTouchX=0,letterTouchY=0;
+let startedOnNav=false;
+document.getElementById("letterScene").addEventListener("touchstart",e=>{
+  const t=e.changedTouches[0];
+  letterTouchX=t.clientX;letterTouchY=t.clientY;
+  startedOnNav=!!e.target.closest(".letterNav");
+},{passive:true});
+document.getElementById("letterScene").addEventListener("touchend",e=>{
+  if(startedOnNav)return;
+  const t=e.changedTouches[0];
+  const dx=t.clientX-letterTouchX,dy=t.clientY-letterTouchY;
+  /* horizontal swipe only */
+  if(Math.abs(dx)<70 || Math.abs(dx)<Math.abs(dy))return;
+  if(dx<0)nextPage(); else previousPage();
+},{passive:true});
+
+/* =========================================================
+   FINAL
+========================================================= */
+function finishLetter(){
+  document.getElementById("letterScene").classList.remove("show");
+  setTimeout(()=>{
+    document.getElementById("final").classList.add("show");
+    setTimeout(()=>{
+      document.getElementById("final").classList.remove("show");
+      setTimeout(()=>{
+        document.getElementById("loveScreen").classList.add("show");
+        spawnLoveParticles();
+      },550);
+    },3200);
+  },900);
+}
+function revealLove(){
+  const screen=document.getElementById("loveScreen");
+  if(screen.classList.contains("revealed"))return;
+  screen.classList.add("revealed");
+  spawnLoveParticles();
+}
+function spawnLoveParticles(){
+  const box=document.getElementById("loveParticles");
+  for(let i=0;i<30;i++){
+    setTimeout(()=>{
+      const p=document.createElement("div");
+      p.className="loveParticle";
+      p.textContent=Math.random()>.25?"♡":"·";
+      p.style.left=Math.random()*100+"%";
+      p.style.fontSize=(9+Math.random()*20)+"px";
+      p.style.animationDuration=(5+Math.random()*6)+"s";
+      box.appendChild(p);
+      setTimeout(()=>p.remove(),13000);
+    },i*180);
+  }
+}
+
+/* initial draw state */
+drawSnake();
+</script>
+</body>
+</html>
